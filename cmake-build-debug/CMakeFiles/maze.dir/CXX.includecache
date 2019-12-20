@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/mi/CLionProjects/maze/doGraphics.cpp
+iostream
+-
+SFML/Graphics.hpp
+C:/Users/mi/CLionProjects/maze/SFML/Graphics.hpp
+
