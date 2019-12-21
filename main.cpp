@@ -2,7 +2,12 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-void doGraphics(const std::vector<std::vector<int>> &maze);
+
+
+
+void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window);
+
+void keepWindowOpened(sf::RenderWindow &window);
 
 
 int main() {
@@ -25,10 +30,40 @@ int main() {
 
         file.close();
 
-        doGraphics(maze);
+        sf::ContextSettings settings;
+        settings.antialiasingLevel = 8;
+        double windowWidth = 1000;
+        double windowHeight = 1000;
+
+        sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
+                                sf::Style::Default, settings);
+        window.clear(sf::Color::Red);
+
+        initMazeDraw(maze,window);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        window.display();
+
+        keepWindowOpened(window);
     }
 
-
-
+    else {
+        std::cout << "File issue" << std::endl;
+    }
     return 0;
 }

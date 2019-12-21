@@ -1,22 +1,17 @@
 #include <iostream>
-#include "SFML/Graphics.hpp"
+#include "head.h"
 
-void doGraphics(const std::vector<std::vector<int>> &maze) {
+
+void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window) {
+    sf::Vector2<unsigned int> size = window.getSize();
+    double windowWidth = size.x;
+    double windowHeight = size.y;
+
     int lenX = maze.size();
     int lenY = maze[0].size();
 
-    double windowWidth = 1000;
-    double windowHeight = 1000;
-
-    double xTileSize = windowWidth / (lenX+1);
-    double yTileSize = windowHeight / (lenY+1);
-
-    sf::ContextSettings settings;
-    settings.antialiasingLevel = 8;
-
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
-                            sf::Style::Default, settings);
-    window.clear(sf::Color::Red);
+    double xTileSize = windowWidth / (lenX + 1);
+    double yTileSize = windowHeight / (lenY + 1);
 
     sf::RectangleShape tile;
     tile.setSize(sf::Vector2f(xTileSize, yTileSize));
@@ -34,9 +29,9 @@ void doGraphics(const std::vector<std::vector<int>> &maze) {
             window.draw(tile);
         }
     }
+}
 
-    window.display();
-
+void keepWindowOpened(sf::RenderWindow &window){
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {

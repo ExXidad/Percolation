@@ -7,6 +7,8 @@
 
 
 
+#include "SFML/Graphics.hpp"
+
 
 
 #endif //MAZE_HEAD_H
