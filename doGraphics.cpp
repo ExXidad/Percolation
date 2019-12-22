@@ -10,8 +10,8 @@ void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &w
     int lenX = maze.size();
     int lenY = maze[0].size();
 
-    double xTileSize = windowWidth / (lenX + 1);
-    double yTileSize = windowHeight / (lenY + 1);
+    double xTileSize = windowWidth / (lenX);
+    double yTileSize = windowHeight / (lenY);
 
     sf::RectangleShape tile;
     tile.setSize(sf::Vector2f(xTileSize, yTileSize));
@@ -25,13 +25,34 @@ void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &w
                 tile.setFillColor(sf::Color::Black);
             }
 
-            tile.setPosition(i * xTileSize + xTileSize / 2, j * yTileSize + yTileSize / 2);
+            tile.setPosition(i * xTileSize, j * yTileSize);
             window.draw(tile);
         }
     }
 }
 
-void keepWindowOpened(sf::RenderWindow &window){
+void drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY) {
+    sf::Vector2<unsigned int> size = window.getSize();
+    double windowWidth = size.x;
+    double windowHeight = size.y;
+
+    int len = pathX.size();
+
+    double xTileSize = windowWidth / (lenX);
+    double yTileSize = windowHeight / (lenY);
+
+    sf::RectangleShape tile;
+    tile.setSize(sf::Vector2f(xTileSize, yTileSize));
+    tile.setOutlineThickness(0);
+    tile.setFillColor(sf::Color::Red);
+
+    for (int i = 0; i < len; ++i) {
+        tile.setPosition(pathX[i] * xTileSize, pathY[i] * yTileSize);
+        window.draw(tile);
+    }
+}
+
+void keepWindowOpened(sf::RenderWindow &window) {
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
