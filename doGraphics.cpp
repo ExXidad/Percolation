@@ -1,5 +1,5 @@
 #include <iostream>
-#include "head.h"
+#include "SFML/Graphics.hpp"
 
 
 void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window) {
@@ -31,7 +31,8 @@ void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &w
     }
 }
 
-void drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY) {
+void
+drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY) {
     sf::Vector2<unsigned int> size = window.getSize();
     double windowWidth = size.x;
     double windowHeight = size.y;
@@ -41,15 +42,21 @@ void drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::
     double xTileSize = windowWidth / (lenX);
     double yTileSize = windowHeight / (lenY);
 
-    sf::RectangleShape tile;
-    tile.setSize(sf::Vector2f(xTileSize, yTileSize));
+    sf::CircleShape tile;
+    double radius = std::min(xTileSize, yTileSize) / 2 / 1.618;
+    tile.setRadius(radius);
     tile.setOutlineThickness(0);
     tile.setFillColor(sf::Color::Red);
 
+    sf::VertexArray lines(sf::LinesStrip, len);
+
     for (int i = 0; i < len; ++i) {
-        tile.setPosition(pathX[i] * xTileSize, pathY[i] * yTileSize);
+        lines[i].position  = sf::Vector2f(pathX[i] * xTileSize + xTileSize / 2, pathY[i] * yTileSize + yTileSize / 2);
+        lines[i].color = sf::Color::Red;
+        tile.setPosition(pathX[i] * xTileSize + xTileSize / 2 - radius, pathY[i] * yTileSize + yTileSize / 2 - radius);
         window.draw(tile);
     }
+    window.draw(lines);
 }
 
 void keepWindowOpened(sf::RenderWindow &window) {

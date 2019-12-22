@@ -1,8 +1,8 @@
-#include "head.h"
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <queue>
+#include "SFML/Graphics.hpp"
 
 
 void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window);
