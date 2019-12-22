@@ -7,7 +7,8 @@
 
 void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window);
 
-void drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY);
+void
+drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY);
 
 void keepWindowOpened(sf::RenderWindow &window);
 
@@ -55,13 +56,13 @@ int main() {
 
         sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
                                 sf::Style::Default, settings);
-        window.clear(sf::Color::Red);
+        window.clear(sf::Color::Blue);
 
         initMazeDraw(maze, window);
 
         //set entrance/exit point
-        int x0 = 100, y0 = 3;
-        int x1 = 500, y1 = 501;
+        int x0 = 0, y0 = 0;//x0 = 100, y0 = 3;
+        int x1 = 29, y1 = 29; //x1 = 500, y1 = 501;
 
         if (x0 > lenX - 1 || x0 < 0 || maze[x0][y0] == 0 ||
             y0 > lenY - 1 || y0 < 0 ||
@@ -81,6 +82,7 @@ int main() {
             std::queue<int> queueY;
             queueX.push(currentX);
             queueY.push(currentY);
+
 
             while (!queueX.empty() || ((currentX != x1) || (currentY != y1))) {
                 currentX = queueX.front();
@@ -110,8 +112,8 @@ int main() {
             if (dist[x1][y1] == 1000000) {
                 std::cout << "End point can't be reached" << std::endl;
             } else {
-                std::vector<int> pathX {x1};
-                std::vector<int> pathY {y1};
+                std::vector<int> pathX{x1};
+                std::vector<int> pathY{y1};
                 currentX = x1;
                 currentY = y1;
                 bool addedToPath;
@@ -122,12 +124,9 @@ int main() {
                         for (int i = -1; i <= 1; ++i) {
                             nextX = currentX + i;
                             nextY = currentY + j;
-                            if ((nextX < lenX) & (nextX > -1) & (nextY < lenY) & (nextY > -1) &
-                                ((abs(i) == 1) xor (abs(j) == 1)) & (maze[nextX][nextY] == 1)
+                            if ((nextX < lenX) && (nextX > -1) && (nextY < lenY) && (nextY > -1) &&
+                                ((abs(i) == 1) xor (abs(j) == 1)) && (maze[nextX][nextY] == 1)
                                 & (dist[nextX][nextY] == (dist[currentX][currentY] - 1))) {
-
-                                std::cout << "hi" << std::endl;
-
 
                                 currentX = nextX;
                                 currentY = nextY;
