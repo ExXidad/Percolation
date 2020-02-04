@@ -9,10 +9,18 @@
 C:/Users/mi/CLionProjects/maze/doGraphics.cpp
 iostream
 -
-head.h
-C:/Users/mi/CLionProjects/maze/head.h
+SFML/Graphics.hpp
+C:/Users/mi/CLionProjects/maze/SFML/Graphics.hpp
 
-C:/Users/mi/CLionProjects/maze/head.h
+C:/Users/mi/CLionProjects/maze/main.cpp
+fstream
+-
+iostream
+-
+vector
+-
+queue
+-
 SFML/Graphics.hpp
 C:/Users/mi/CLionProjects/maze/SFML/Graphics.hpp
 

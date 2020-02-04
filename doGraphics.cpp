@@ -1,7 +1,6 @@
 #include <iostream>
 #include "SFML/Graphics.hpp"
 
-
 void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window) {
     sf::Vector2<unsigned int> size = window.getSize();
     double windowWidth = size.x;

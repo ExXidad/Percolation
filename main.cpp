@@ -23,6 +23,15 @@ void print2D(const std::vector<std::vector<int>> &data) {
     }
 }
 
+bool pointInMazeQ(int lenX, int lenY, int x, int y) {
+    if (x < lenX && x >= 0 &&
+        y < lenY && y >= 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 
 int main() {
     std::string line;
@@ -46,28 +55,23 @@ int main() {
 
         //print2D(maze);
 
-        //window setup
-        sf::ContextSettings settings;
-        settings.antialiasingLevel = 8;
-
-        //set window size here
-        int windowWidth = 900;
-        int windowHeight = 900;
-
-        sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
-                                sf::Style::Default, settings);
-        window.clear(sf::Color::Blue);
-
-        initMazeDraw(maze, window);
-
         //set entrance/exit point
         int x0 = 0, y0 = 0;//x0 = 100, y0 = 3;
         int x1 = 29, y1 = 29; //x1 = 500, y1 = 501;
 
-        if (x0 > lenX - 1 || x0 < 0 || maze[x0][y0] == 0 ||
-            y0 > lenY - 1 || y0 < 0 ||
-            x1 > lenX - 1 || x1 < 0 ||
-            y1 > lenY - 1 || y1 < 0 || maze[x1][y1] == 0) {
+//        int x0, y0;
+//        int x1, y1;
+//
+//        std::cout << "Enter start point: " << std::endl;
+//        std::cin >> x0;
+//        std::cin >> y0;
+//        std::cout << "Enter exit point: " << std::endl;
+//        std::cin >> x1;
+//        std::cin >> y1;
+
+
+        if (!pointInMazeQ(lenX, lenY, x0, y0) || maze[x0][y0] == 0 ||
+            !pointInMazeQ(lenX, lenY, x1, y1) || maze[x1][y1] == 0) {
             std::cout << "Wrong enter/exit points" << std::endl;
         } else {
             std::vector<std::vector<int>> dist(lenX, std::vector<int>(lenY, 1000000));
@@ -84,21 +88,21 @@ int main() {
             queueY.push(currentY);
 
 
-            while (!queueX.empty() || ((currentX != x1) || (currentY != y1))) {
+            while ((!queueX.empty() && !queueY.empty()) || !((currentX == x1) && (currentY == y1))) {
                 currentX = queueX.front();
                 currentY = queueY.front();
                 for (int j = -1; j <= 1; ++j) {
                     for (int i = -1; i <= 1; ++i) {
                         nextX = currentX + i;
                         nextY = currentY + j;
-                        if ((nextX < lenX) && (nextX > -1) && (nextY < lenY) && (nextY > -1) &&
-                            (!wasVisited[nextX][nextY]) &&
-                            ((abs(i) == 1) xor (abs(j) == 1)) && (maze[nextX][nextY] == 1)) {
+                        if (pointInMazeQ(lenX, lenY, nextX, nextY) &&
+                            !wasVisited[nextX][nextY] &&
+                            maze[nextX][nextY] == 1 &&
+                            ((abs(i) == 1) xor (abs(j) == 1))) {
                             queueX.push(nextX);
                             queueY.push(nextY);
                             wasVisited[nextX][nextY] = true;
                             dist[nextX][nextY] = std::min(dist[currentX][currentY] + 1, dist[nextX][nextY]);
-
                         }
                     }
                 }
@@ -118,15 +122,16 @@ int main() {
                 currentY = y1;
                 bool addedToPath;
 
-                while ((currentX != x0) || (currentY != y0)) {
+                while (!((currentX == x0) && (currentY == y0))) {
                     addedToPath = false;
                     for (int j = -1; j <= 1; ++j) {
                         for (int i = -1; i <= 1; ++i) {
                             nextX = currentX + i;
                             nextY = currentY + j;
-                            if ((nextX < lenX) && (nextX > -1) && (nextY < lenY) && (nextY > -1) &&
-                                ((abs(i) == 1) xor (abs(j) == 1)) && (maze[nextX][nextY] == 1)
-                                & (dist[nextX][nextY] == (dist[currentX][currentY] - 1))) {
+                            if (pointInMazeQ(lenX, lenY, nextX, nextY) &&
+                                ((abs(i) == 1) xor (abs(j) == 1)) &&
+                                (maze[nextX][nextY] == 1) &&
+                                (dist[nextX][nextY] == (dist[currentX][currentY] - 1))) {
 
                                 currentX = nextX;
                                 currentY = nextY;
@@ -141,11 +146,26 @@ int main() {
                         if (addedToPath) { break; }
                     }
                 }
+                //window setup
+                sf::ContextSettings settings;
+                settings.antialiasingLevel = 8;
+
+                //set window size here
+                int windowWidth = 900;
+                int windowHeight = 900;
+
+                sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
+                                        sf::Style::Default, settings);
+                window.clear(sf::Color::Blue);
+
+                initMazeDraw(maze, window);
+
                 drawPath(pathX, pathY, window, lenX, lenY);
+                window.display();
+                keepWindowOpened(window);
             }
+
         }
-        window.display();
-        keepWindowOpened(window);
     } else {
         std::cout << "File issue" << std::endl;
     }
