@@ -1,24 +1,30 @@
 #include <iostream>
+#include <utility>
 #include "SFML/Graphics.hpp"
 
-void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &window) {
+typedef std::pair<int, int> intPair;
+typedef std::vector<int> intVector;
+typedef std::vector<bool> boolVector;
+typedef std::vector<std::vector<int>> intMap2D;
+typedef std::vector<std::vector<bool>> boolMap2D;
+typedef std::vector<intPair> intVectorPair;
+
+void initMazeDraw(const intMap2D &maze, sf::RenderWindow &window) {
     sf::Vector2<unsigned int> size = window.getSize();
     double windowWidth = size.x;
     double windowHeight = size.y;
 
-    int lenX = maze.size();
-    int lenY = maze[0].size();
 
-    double xTileSize = windowWidth / (lenX);
-    double yTileSize = windowHeight / (lenY);
+    double xTileSize = windowWidth/maze[0].size();
+    double yTileSize = windowHeight/maze.size();
 
     sf::RectangleShape tile;
     tile.setSize(sf::Vector2f(xTileSize, yTileSize));
     tile.setOutlineThickness(0);
 
-    for (int j = 0; j < lenY; ++j) {
-        for (int i = 0; i < lenX; ++i) {
-            if (maze[i][j]) {
+    for (int j = 0; j < maze.size(); ++j) {
+        for (int i = 0; i < maze[0].size(); ++i) {
+            if (maze[j][i]) {
                 tile.setFillColor(sf::Color::White);
             } else {
                 tile.setFillColor(sf::Color::Black);
@@ -31,12 +37,12 @@ void initMazeDraw(const std::vector<std::vector<int>> &maze, sf::RenderWindow &w
 }
 
 void
-drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::RenderWindow &window, int lenX, int lenY) {
+drawPath(const intVectorPair &path, sf::RenderWindow &window, int lenX, int lenY) {
     sf::Vector2<unsigned int> size = window.getSize();
     double windowWidth = size.x;
     double windowHeight = size.y;
 
-    int len = pathX.size();
+    int len = path.size();
 
     double xTileSize = windowWidth / (lenX);
     double yTileSize = windowHeight / (lenY);
@@ -50,9 +56,11 @@ drawPath(const std::vector<int> &pathX, const std::vector<int> &pathY, sf::Rende
     sf::VertexArray lines(sf::LinesStrip, len);
 
     for (int i = 0; i < len; ++i) {
-        lines[i].position  = sf::Vector2f(pathX[i] * xTileSize + xTileSize / 2, pathY[i] * yTileSize + yTileSize / 2);
+        lines[i].position = sf::Vector2f(path[i].first * xTileSize + xTileSize / 2,
+                                         path[i].second * yTileSize + yTileSize / 2);
         lines[i].color = sf::Color::Red;
-        tile.setPosition(pathX[i] * xTileSize + xTileSize / 2 - radius, pathY[i] * yTileSize + yTileSize / 2 - radius);
+        tile.setPosition(path[i].first * xTileSize + xTileSize / 2 - radius,
+                         path[i].second * yTileSize + yTileSize / 2 - radius);
         window.draw(tile);
     }
     window.draw(lines);
