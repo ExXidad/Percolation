@@ -6,13 +6,7 @@
 
 #IncludeRegexTransform: 
 
-C:/Users/mi/CLionProjects/maze/doGraphics.cpp
-iostream
--
-SFML/Graphics.hpp
-C:/Users/mi/CLionProjects/maze/SFML/Graphics.hpp
-
-C:/Users/mi/CLionProjects/maze/main.cpp
+/home/exxidad/CLionProjects/maze/main.cpp
 fstream
 -
 iostream
@@ -22,5 +16,19 @@ vector
 queue
 -
 SFML/Graphics.hpp
-C:/Users/mi/CLionProjects/maze/SFML/Graphics.hpp
+/home/exxidad/CLionProjects/maze/SFML/Graphics.hpp
+percolation.h
+/home/exxidad/CLionProjects/maze/percolation.h
+
+/home/exxidad/CLionProjects/maze/percolation.h
+random
+-
+ctime
+-
+vector
+-
+iomanip
+-
+iostream
+-
 

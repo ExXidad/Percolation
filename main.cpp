@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <thread>
 #include "SFML/Graphics.hpp"
 #include "percolation.h"
 
@@ -13,42 +14,15 @@ typedef std::vector<std::vector<bool>> boolMap2D;
 typedef std::queue<intPair> intQueuePair;
 typedef std::vector<intPair> intVectorPair;
 
-void initMazeDraw(const intMap2D &maze, sf::RenderWindow &window);
-
-void
-drawPath(const intVectorPair &path, sf::RenderWindow &window, int lenX, int lenY);
-
-void keepWindowOpened(sf::RenderWindow &window);
-
-void print2D(const std::vector<std::vector<int>> &data) {
-    int lenX = data.size();
-    int lenY = data[0].size();
-    for (int j = 0; j < lenY; ++j) {
-        for (int i = 0; i < lenX; ++i) {
-            std::cout << data[i][j] << "\t";
-        }
-        std::cout << std::endl;
-    }
-}
-
 bool pointInMazeQ(int lenX, int lenY, int x, int y) {
     return x < lenX && x >= 0 &&
            y < lenY && y >= 0;
 }
 
-
-int main() {
-    int m = 10;
-    int n = 5;
-
-
+bool testPerk(mapInt &maze, int m, int n) {
     int x0 = 0, y0 = 0;
-    //int x1 = 29, y1 = 29;
+
     int x1 = n - 1, y1 = m + 1;
-
-    mapInt maze = generateMap(m, n, 40);
-    std::cout << maze;
-
 
     intMap2D dist(m + 2, intVector(n, -1));
     boolMap2D wasVisited(m + 2, boolVector(n, false));
@@ -88,59 +62,58 @@ int main() {
         queue.pop();
     }
 
-    std::cout << std::endl;
-    std::cout << dist;
+    if (dist[y1][x1] == -1) return false; else return true;
+}
 
-    if (dist[y1][x1] == -1) std::cout << "End point can't be reached" << std::endl;
-    else {
-        intVectorPair path{intPair(x1, y1)};
-        currentX = x1;
-        currentY = y1;
-        bool addedToPath;
+void computeNIterations(uint64_t &counter, int m, int n, int K, uint64_t N) {
+    for (int iteration = 0; iteration < N; ++iteration) {
+        mapInt maze = generateMap(m, n, K);//Returns (m+2):n size
 
-        while (!((currentX == x0) && (currentY == y0))) {
-            addedToPath = false;
-            for (int j = -1; j <= 1; ++j) {
-                for (int i = -1; i <= 1; ++i) {
-                    nextX = currentX + i;
-                    nextY = currentY + j;
-                    //std::cout << dist[currentY][currentX] << " : " << dist[nextY][nextX] << std::endl;
-                    if (pointInMazeQ(n, m + 2, nextX, nextY) &&
-                        ((abs(i) == 1) xor (abs(j) == 1)) &&
-                        (maze[nextY][nextX] == 1) &&
-                        (dist[nextY][nextX] == (dist[currentY][currentX] - 1))) {
+        //
+        // std::cout << maze;
 
-                        currentX = nextX;
-                        currentY = nextY;
+        bool passQ = testPerk(maze, m, n);
 
-                        path.push_back(intPair(nextX, nextY));
-
-                        addedToPath = true;
-                        break;
-                    }
-                }
-                if (addedToPath) { break; }
-            }
-        }
-        //window setup
-        sf::ContextSettings settings;
-        settings.antialiasingLevel = 8;
-
-        //set window size here
-        int windowWidth = 30 * n;
-        int windowHeight = 30 * (m + 2);
-
-        sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Maze",
-                                sf::Style::Default, settings);
-        window.clear(sf::Color::Blue);
-
-        initMazeDraw(maze, window);
-
-        drawPath(path, window, n, m + 2);
-        window.display();
-        keepWindowOpened(window);
+        if (passQ) ++counter;
     }
+}
 
+int main() {
+    int m = 10;
+    int n = 5;
 
+    uint64_t iters = pow(10, 6);
+
+    int numberOfThreads = 30;
+    uint64_t itersPerThread = iters / numberOfThreads;
+
+    iters = itersPerThread * numberOfThreads;
+
+    std::cout << "{" << std::endl;
+
+    for (int K = std::min(m, n); K <= m * n - std::abs(m - n); ++K) {
+        std::vector<uint64_t> partialCounters(numberOfThreads, 0);
+        std::vector<std::thread> threads(0);
+        for (int threadNumber = 0; threadNumber < numberOfThreads; ++threadNumber) {
+            threads.emplace_back(
+                    std::thread(computeNIterations, std::ref(partialCounters[threadNumber]), m, n, K, itersPerThread));
+        }
+
+        for (auto &thread : threads) {
+            thread.join();
+        }
+
+        uint64_t counter = std::accumulate(partialCounters.begin(), partialCounters.end(), uint64_t(0));
+//
+//        std::cout << counter << std::endl;
+//        for (const auto &item : partialCounters) {
+//            std::cout << " " << item;
+//        }
+//        std::cout << std::endl;
+
+        std::cout << "{" << K << ", " << static_cast<long double>(counter) / iters << "}, " << std::endl;
+        counter = 0;
+    }
+    std::cout << "}" << std::endl;
     return 0;
 }

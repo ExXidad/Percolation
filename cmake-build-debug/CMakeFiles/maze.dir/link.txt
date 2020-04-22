@@ -1,3 +1,1 @@
-"C:\Program Files\JetBrains\CLion 2019.2.5\bin\cmake\win\bin\cmake.exe" -E remove -f CMakeFiles\maze.dir/objects.a
-C:\MinGW\bin\ar.exe cr CMakeFiles\maze.dir/objects.a @CMakeFiles\maze.dir\objects1.rsp
-C:\MinGW\bin\g++.exe -g   -Wl,--whole-archive CMakeFiles\maze.dir/objects.a -Wl,--no-whole-archive  -o maze.exe -Wl,--out-implib,libmaze.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\maze.dir\linklibs.rsp
+/usr/bin/c++  -g   CMakeFiles/maze.dir/main.cpp.o CMakeFiles/maze.dir/doGraphics.cpp.o CMakeFiles/maze.dir/percolation.cpp.o CMakeFiles/maze.dir/myTypes.cpp.o  -o maze -lsfml-graphics -lsfml-window -lsfml-system -lpthread 

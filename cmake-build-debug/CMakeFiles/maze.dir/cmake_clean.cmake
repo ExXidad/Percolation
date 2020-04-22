@@ -1,9 +1,9 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/maze.dir/doGraphics.cpp.obj"
-  "CMakeFiles/maze.dir/main.cpp.obj"
-  "libmaze.dll.a"
-  "maze.exe"
-  "maze.exe.manifest"
+  "CMakeFiles/maze.dir/doGraphics.cpp.o"
+  "CMakeFiles/maze.dir/main.cpp.o"
+  "CMakeFiles/maze.dir/myTypes.cpp.o"
+  "CMakeFiles/maze.dir/percolation.cpp.o"
+  "maze"
   "maze.pdb"
 )
 

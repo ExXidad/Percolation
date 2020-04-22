@@ -4,8 +4,10 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/mi/CLionProjects/maze/doGraphics.cpp" "C:/Users/mi/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/doGraphics.cpp.obj"
-  "C:/Users/mi/CLionProjects/maze/main.cpp" "C:/Users/mi/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/main.cpp.obj"
+  "/home/exxidad/CLionProjects/maze/doGraphics.cpp" "/home/exxidad/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/doGraphics.cpp.o"
+  "/home/exxidad/CLionProjects/maze/main.cpp" "/home/exxidad/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/main.cpp.o"
+  "/home/exxidad/CLionProjects/maze/myTypes.cpp" "/home/exxidad/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/myTypes.cpp.o"
+  "/home/exxidad/CLionProjects/maze/percolation.cpp" "/home/exxidad/CLionProjects/maze/cmake-build-debug/CMakeFiles/maze.dir/percolation.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
