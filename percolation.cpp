@@ -2,7 +2,6 @@
 
 
 mapInt generateMap(int m, int n, int K) {
-    std::srand(time(nullptr));
     mapInt map(m + 2, std::vector<int>(n, 0));
     if (m * n <= K) {
         for (int j = 0; j < m + 2; ++j) {
@@ -11,13 +10,21 @@ mapInt generateMap(int m, int n, int K) {
             }
         }
     } else {
+        std::vector<std::pair<int, int>> possiblePlaces;
+        for (int j = 1; j < m + 1; ++j) {
+            for (int i = 0; i < n; ++i) {
+                possiblePlaces.emplace_back(std::pair<int, int>(i, j));
+            }
+        }
+
         for (auto &item : map[0]) item = 1;
         for (auto &item : map[m + 1]) item = 1;
 
         for (int k = 0; k < K; ++k) {
-            int j = rand() % (m + 2);
-            int i = rand() % n;
-            if (map[j][i] == 0) map[j][i] = 1; else --k;
+            int possibleNumber = rand() % possiblePlaces.size();
+            std::pair<int, int> pair = possiblePlaces[possibleNumber];
+            map[pair.second][pair.first] = 1;
+            possiblePlaces.erase(possiblePlaces.begin() + possibleNumber);
         }
     }
 

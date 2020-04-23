@@ -20,6 +20,8 @@ bool pointInMazeQ(int lenX, int lenY, int x, int y) {
 }
 
 bool testPerk(mapInt &maze, int m, int n) {
+    std::srand(time(nullptr));
+
     int x0 = 0, y0 = 0;
 
     int x1 = n - 1, y1 = m + 1;
@@ -69,9 +71,6 @@ void computeNIterations(uint64_t &counter, int m, int n, int K, uint64_t N) {
     for (int iteration = 0; iteration < N; ++iteration) {
         mapInt maze = generateMap(m, n, K);//Returns (m+2):n size
 
-        //
-        // std::cout << maze;
-
         bool passQ = testPerk(maze, m, n);
 
         if (passQ) ++counter;
@@ -79,19 +78,22 @@ void computeNIterations(uint64_t &counter, int m, int n, int K, uint64_t N) {
 }
 
 int main() {
-    int m = 10;
-    int n = 5;
+    std::srand(time(nullptr));
+
+    int m = 30;
+    int n = 30;
 
     uint64_t iters = pow(10, 6);
 
-    int numberOfThreads = 30;
+    int numberOfThreads = 12;
     uint64_t itersPerThread = iters / numberOfThreads;
 
     iters = itersPerThread * numberOfThreads;
 
-    std::cout << "{" << std::endl;
+    std::fstream file;
+    file.open("result.txt", std::ios::out);
 
-    for (int K = std::min(m, n); K <= m * n - std::abs(m - n); ++K) {
+    for (int K = m; K <= m * n - std::min(m, n); K+=10) {
         std::vector<uint64_t> partialCounters(numberOfThreads, 0);
         std::vector<std::thread> threads(0);
         for (int threadNumber = 0; threadNumber < numberOfThreads; ++threadNumber) {
@@ -104,16 +106,12 @@ int main() {
         }
 
         uint64_t counter = std::accumulate(partialCounters.begin(), partialCounters.end(), uint64_t(0));
-//
-//        std::cout << counter << std::endl;
-//        for (const auto &item : partialCounters) {
-//            std::cout << " " << item;
-//        }
-//        std::cout << std::endl;
 
-        std::cout << "{" << K << ", " << static_cast<long double>(counter) / iters << "}, " << std::endl;
-        counter = 0;
+        file << K << " " << static_cast<long double>(counter) / iters << std::endl;
+        std::cout << "Progress: " << static_cast<double>(K-m) / (m * n - std::min(m, n) - m)*100<< "%"
+                  << std::endl;
     }
-    std::cout << "}" << std::endl;
+
+    file.close();
     return 0;
 }
